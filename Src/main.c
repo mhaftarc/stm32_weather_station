@@ -19,6 +19,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include <string.h>
+#include "sensor.h"
+#include "uart_app.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -106,16 +108,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  uart_app_send_send_sensor_data();
+
+
+
+
+
+
 
     /* USER CODE END WHILE */
-	  HAL_UART_Transmit(&huart2, (uint8_t*)"Hello michalo", strlen("Hello michalo"), 100);
+
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
+  * @brief System Clock Confi	guration
   * @retval None
   */
 void SystemClock_Config(void)

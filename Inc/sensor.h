@@ -1,13 +1,17 @@
-/*
- * sensor.h
- *
- *  Created on: 18 wrz 2026
- *      Author: Michał
- */
 
 #ifndef SENSOR_H_
 #define SENSOR_H_
 
+typedef struct {
+	float temperature;
+	float humidity;
+	float pressure;
+} SensorData;
 
 
-#endif /* SENSOR_H_ */
+SensorData mock_sensor(void);
+
+
+
+
+#endif

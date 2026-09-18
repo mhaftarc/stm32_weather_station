@@ -1,8 +1,14 @@
-/*
- * sensor.c
- *
- *  Created on: 18 wrz 2026
- *      Author: Michał
- */
+#include "sensor.h"
 
 
+
+
+SensorData mock_sensor(void){
+	SensorData data;
+
+	data.temperature = 23;
+	data.humidity = 76;
+	data.pressure = 1013;
+
+	return data;
+}
