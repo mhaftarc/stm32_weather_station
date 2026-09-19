@@ -6,6 +6,6 @@
 
 
 
-void uart_app_send_send_sensor_data(void);
+void uart_app_send_sensor_data(void);
 
 #endif
