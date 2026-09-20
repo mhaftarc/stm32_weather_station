@@ -25,6 +25,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+#include "bme280_driver.h"
+#include "sensor.h"
+#include "timer_app.h"
+#include "uart_app.h"
 
 /* USER CODE END Includes */
 
