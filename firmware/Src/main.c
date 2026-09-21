@@ -115,9 +115,10 @@ int main(void)
   while (1)
   {
 	  if(sensor_read_flag){
-	  uart_app_send_sensor_data();
-	  sensor_read_flag = false;
-	  }
+		  uart_app_send_sensor_data();
+		  sensor_read_flag = false;
+		  }
+
 
 
 
