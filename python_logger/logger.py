@@ -2,8 +2,12 @@ import serial
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import datetime
+import csv
 
 ser = serial.Serial("COM4",115200)
+csv_file = open("data.csv", "a", newline="")
+csv_writer = csv.writer(csv_file)
+csv_writer.writerow(["timestamp", "temperature", "pressure", "humidity"])   
 
 times = []
 temperatures = []
@@ -29,6 +33,8 @@ def update(frame):
     temperatures.append(temperature)
     pressures.append(pressure)
     humidities.append(humidity)
+    csv_writer.writerow([datetime.datetime.now(), temperature, pressure, humidity])
+    csv_file.flush()
     ax1.clear()
     ax1.plot(times, temperatures)
     ax1.set_ylabel("Temp [°C]")
