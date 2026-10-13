@@ -4,7 +4,7 @@ import matplotlib.animation as animation
 import datetime
 import csv
 
-ser = serial.Serial("COM4",115200)
+ser = serial.Serial("COM5",115200)
 csv_file = open("data.csv", "a", newline="")
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["timestamp", "temperature", "pressure", "humidity"])   
@@ -41,7 +41,10 @@ def update(frame):
 
     ax2.clear()
     ax2.plot(times, pressures)
+    ax2.ticklabel_format(axis="y", useOffset=False)
+    ax2.set_ylim(990, 1030)
     ax2.set_ylabel("Pressure [hPa]")
+
 
     ax3.clear()
     ax3.plot(times, humidities)
