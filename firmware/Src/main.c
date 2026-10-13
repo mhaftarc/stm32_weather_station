@@ -100,6 +100,14 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   timer_app_start();
+  BSP_LED_Init(LED2);
+
+
+
+  bme280_connected();
+
+  bme280_read_calibration();
+  bme280_configure();
 
 
   /* USER CODE END 2 */

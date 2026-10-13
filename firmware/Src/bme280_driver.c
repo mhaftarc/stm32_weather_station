@@ -3,6 +3,9 @@
 
 bme280_calibration_data_t bme280_calib;
 int32_t t_fine;
+int32_t bme280_temperature;
+uint32_t bme280_pressure;
+uint32_t bme280_humidity;
 
 bool bme280_connected(void){
 	uint8_t memory_state;
@@ -18,7 +21,7 @@ void bme280_read_calibration(void){
 	uint8_t calib_data_1[26];
 	uint8_t calib_data_2[7];
 	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0x88, I2C_MEMADD_SIZE_8BIT, calib_data_1, 26, 100);
-	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0xE1, I2C_MEMADD_SIZE_8BIT, calib_data_2, 16, 100);
+	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0xE1, I2C_MEMADD_SIZE_8BIT, calib_data_2, 7, 100);
 
 
 	bme280_calib.dig_T1 = calib_data_1[0] | (calib_data_1[1] << 8);
