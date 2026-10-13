@@ -2,6 +2,7 @@
 #define BME280_DRIVER_H_
 #include <stdbool.h>
 #include <stdint.h>
+#include "stm32f4xx_hal.h"
 
 #define BME280_I2C_ADRESS (0x76 << 1)
 #define BME280_REG_ID      0xD0
@@ -37,11 +38,11 @@ typedef struct {
 
 extern bme280_calibration_data_t bme280_calibration_set;
 
-
+HAL_StatusTypeDef bme280_init(void);
 bool bme280_connected(void);
-void bme280_read_calibration(void);
-void bme280_configure(void);
-void bme280_read_data(void);
+HAL_StatusTypeDef bme280_read_calibration(void);
+HAL_StatusTypeDef bme280_configure(void);
+HAL_StatusTypeDef bme280_read_data(void);
 int32_t bme280_compensate_T(int32_t adc_T);
 uint32_t bme280_compensate_P(int32_t adc_P);
 uint32_t bme280_compensate_H(int32_t adc_H);

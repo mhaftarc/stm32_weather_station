@@ -7,21 +7,37 @@ int32_t bme280_temperature;
 uint32_t bme280_pressure;
 uint32_t bme280_humidity;
 
+
+
+
+
 bool bme280_connected(void){
+	HAL_StatusTypeDef status;
+
 	uint8_t memory_state;
-	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, BME280_REG_ID, I2C_MEMADD_SIZE_8BIT, &memory_state, 1, 100);
+	status = HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, BME280_REG_ID, I2C_MEMADD_SIZE_8BIT, &memory_state, 1, 100);
+	if (status != HAL_OK) {
+	    return false;
+	}
 	if(memory_state == BME280_CHIP_ID){
 		return true;
-	}else{
-		return false;
 	}
+
+	return false;
 }
 
-void bme280_read_calibration(void){
+HAL_StatusTypeDef bme280_read_calibration(void){
+	HAL_StatusTypeDef status;
 	uint8_t calib_data_1[26];
 	uint8_t calib_data_2[7];
-	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0x88, I2C_MEMADD_SIZE_8BIT, calib_data_1, 26, 100);
-	HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0xE1, I2C_MEMADD_SIZE_8BIT, calib_data_2, 7, 100);
+	status = HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0x88, I2C_MEMADD_SIZE_8BIT, calib_data_1, 26, 100);
+	if(status != HAL_OK){
+			return status;
+		}
+	status = HAL_I2C_Mem_Read(&hi2c1,BME280_I2C_ADRESS, 0xE1, I2C_MEMADD_SIZE_8BIT, calib_data_2, 7, 100);
+	if(status != HAL_OK){
+		return status;
+	}
 
 
 	bme280_calib.dig_T1 = calib_data_1[0] | (calib_data_1[1] << 8);
@@ -42,20 +58,61 @@ void bme280_read_calibration(void){
 	bme280_calib.dig_H4 = (calib_data_2[3] << 4) | (calib_data_2[4] & 0x0F);
 	bme280_calib.dig_H5 = (calib_data_2[5] << 4) | (calib_data_2[4] >> 4);
 	bme280_calib.dig_H6 = calib_data_2[6];
+	return HAL_OK;
 }
 
 
-void bme280_configure(void){
+HAL_StatusTypeDef bme280_configure(void){
+	HAL_StatusTypeDef status;
+
 	uint8_t ctrl_hum_value = 0x01; // oversampling x1 humidity
 	uint8_t ctrl_meas_value = ((0x01 << 5) | (0x01 << 2) | (0x3)); // oversampling x1 of temperature and pressure, set to normal working mode
 
-	HAL_I2C_Mem_Write(&hi2c1, BME280_I2C_ADRESS, 0xF2, I2C_MEMADD_SIZE_8BIT, &ctrl_hum_value,sizeof(ctrl_hum_value),100);
-	HAL_I2C_Mem_Write(&hi2c1, BME280_I2C_ADRESS, 0xF4, I2C_MEMADD_SIZE_8BIT, &ctrl_meas_value,sizeof(ctrl_meas_value),100);
+	status = HAL_I2C_Mem_Write(&hi2c1, BME280_I2C_ADRESS, 0xF2, I2C_MEMADD_SIZE_8BIT, &ctrl_hum_value,sizeof(ctrl_hum_value),100);
+	if(status != HAL_OK){
+			return status;
+		}
+	status = HAL_I2C_Mem_Write(&hi2c1, BME280_I2C_ADRESS, 0xF4, I2C_MEMADD_SIZE_8BIT, &ctrl_meas_value,sizeof(ctrl_meas_value),100);
+	if(status != HAL_OK){
+			return status;
+		}
+	return HAL_OK;
+
 }
 
-void bme280_read_data(void){
-	uint8_t measurement[8];
-	HAL_I2C_Mem_Read(&hi2c1, BME280_I2C_ADRESS, 0xF7, I2C_MEMADD_SIZE_8BIT, measurement, sizeof(measurement),100);
+
+HAL_StatusTypeDef bme280_init(void){
+    HAL_StatusTypeDef status;
+
+    if (!bme280_connected()) {
+           return HAL_ERROR;
+       }
+
+
+    status = bme280_read_calibration();
+    if(status != HAL_OK){
+    	return status;
+    }
+
+    status = bme280_configure();
+        if(status != HAL_OK){
+        	return status;
+        }
+
+    return HAL_OK;
+}
+
+
+HAL_StatusTypeDef bme280_read_data(void){
+	HAL_StatusTypeDef status;
+
+	uint8_t measurement[8] = {0};
+
+	status = HAL_I2C_Mem_Read(&hi2c1, BME280_I2C_ADRESS, 0xF7, I2C_MEMADD_SIZE_8BIT, measurement, sizeof(measurement),100);
+	if(status != HAL_OK){
+			return status;
+		}
+
 
 
 	int32_t adc_P = (measurement[0] << 12 | measurement[1] << 4 | measurement[2] >> 4);
@@ -65,7 +122,7 @@ void bme280_read_data(void){
 	bme280_temperature = bme280_compensate_T(adc_T);
 	bme280_pressure = bme280_compensate_P(adc_P);
 	bme280_humidity = bme280_compensate_H(adc_H);
-
+	return HAL_OK;
 }
 
 

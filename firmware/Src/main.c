@@ -101,19 +101,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   timer_app_start();
   BSP_LED_Init(LED2);
+  sensor_init();
 
 
-
-  bme280_connected();
-
-  bme280_read_calibration();
-  bme280_configure();
 
 
   /* USER CODE END 2 */
 
   /* Initialize leds */
-  BSP_LED_Init(LED2);
 
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
