@@ -78,3 +78,16 @@ HAL_StatusTypeDef lcd_init(void)
 }
 
 
+HAL_StatusTypeDef lcd_print(const char *str)
+{
+    HAL_StatusTypeDef status;
+	uint8_t i = 0;
+    while (str[i] != '\0') {
+    	status = lcd_letter(str[i]);
+    	if (status != HAL_OK) {
+    	    return status;
+    	 }
+    	i++;
+    }
+    return HAL_OK;
+}

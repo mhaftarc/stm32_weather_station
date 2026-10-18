@@ -25,6 +25,8 @@ bool lcd_connected(void);
 HAL_StatusTypeDef lcd_init(void);
 HAL_StatusTypeDef lcd_command(uint8_t command);
 HAL_StatusTypeDef lcd_letter(char c);
+HAL_StatusTypeDef lcd_print(const char *str);
+
 
 
 

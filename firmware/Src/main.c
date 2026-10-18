@@ -109,7 +109,7 @@ int main(void)
   sensor_init();
   lcd_init();
 
-  lcd_letter('A');
+  lcd_print("HELLO");
 
 
   /* USER CODE END 2 */
