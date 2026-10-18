@@ -107,7 +107,9 @@ int main(void)
   timer_app_start();
   BSP_LED_Init(LED2);
   sensor_init();
+  lcd_init();
 
+  lcd_letter('A');
 
 
   /* USER CODE END 2 */

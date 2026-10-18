@@ -11,14 +11,6 @@ bool lcd_connected(void)
 
 
 
-HAL_StatusTypeDef lcd_init(void)
-{
-    if (!lcd_connected()) {
-        return HAL_ERROR;
-    }
-
-    return HAL_OK;
-}
 
 
 static HAL_StatusTypeDef lcd_write_nibble(uint8_t nibble, uint8_t rs){
@@ -57,3 +49,32 @@ HAL_StatusTypeDef lcd_letter(char c)
 {
 	return lcd_send_byte((uint8_t)c, LCD_RS);
 }
+
+HAL_StatusTypeDef lcd_init(void)
+{
+    if (!lcd_connected()) {
+        return HAL_ERROR;
+    }
+//initialization process from the data sheet
+    HAL_Delay(50);
+    lcd_write_nibble(0x3, 0);
+    HAL_Delay(5);
+    lcd_write_nibble(0x3, 0);
+    HAL_Delay(1);
+    lcd_write_nibble(0x3, 0);
+    HAL_Delay(1);
+    lcd_write_nibble(0x2, 0); // 4 bit mode
+    HAL_Delay(1);
+
+    lcd_command(LCD_CMD_FUNCTION_SET);
+    lcd_command(LCD_CMD_DISPLAY_OFF);
+    lcd_command(LCD_CMD_CLEAR);
+    HAL_Delay(2);
+    lcd_command(LCD_CMD_ENTRY_MODE);
+    lcd_command(LCD_CMD_DISPLAY_ON);
+
+
+    return HAL_OK;
+}
+
+

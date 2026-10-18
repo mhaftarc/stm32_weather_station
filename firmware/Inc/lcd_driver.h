@@ -13,7 +13,12 @@
 
 // bits 4-7 are data bits, we set then as a variable nibble
 
-
+// function adresses from the datasheet
+#define LCD_CMD_CLEAR        0x01
+#define LCD_CMD_ENTRY_MODE   0x06
+#define LCD_CMD_DISPLAY_OFF  0x08
+#define LCD_CMD_DISPLAY_ON   0x0C
+#define LCD_CMD_FUNCTION_SET 0x28
 bool lcd_connected(void);
 
 
