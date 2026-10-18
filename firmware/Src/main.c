@@ -30,6 +30,10 @@
 #include "sensor.h"
 #include "timer_app.h"
 #include "uart_app.h"
+#include "lcd_driver.h"
+#include <string.h>
+
+
 
 /* USER CODE END Includes */
 
@@ -98,6 +102,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   MX_I2C1_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
   timer_app_start();
   BSP_LED_Init(LED2);
@@ -105,10 +110,10 @@ int main(void)
 
 
 
-
   /* USER CODE END 2 */
 
   /* Initialize leds */
+  BSP_LED_Init(LED2);
 
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
