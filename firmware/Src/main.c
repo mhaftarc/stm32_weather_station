@@ -110,6 +110,8 @@ int main(void)
   lcd_init();
 
   lcd_print("HELLO");
+  lcd_set_cursor(1, 5);
+  lcd_print("X");
 
 
   /* USER CODE END 2 */

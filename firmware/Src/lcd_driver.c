@@ -91,3 +91,25 @@ HAL_StatusTypeDef lcd_print(const char *str)
     }
     return HAL_OK;
 }
+
+HAL_StatusTypeDef lcd_set_cursor(uint8_t row, uint8_t col)
+{
+    uint8_t adress;
+
+    if (row == 0) {
+        adress = col;            // line 0 starts at 0x00
+    } else {
+        adress = 0x40 + col;     // line 1 starts at 0x40
+    }
+
+    return lcd_command(0x80 | adress);
+}
+
+HAL_StatusTypeDef lcd_clear(void)
+{
+    HAL_StatusTypeDef status;
+
+    status = lcd_command(LCD_CMD_CLEAR);
+    HAL_Delay(2);
+    return status;
+}
