@@ -6,12 +6,8 @@
 
 
 
-void uart_app_send_sensor_data(void){
+void uart_app_send_sensor_data(HAL_StatusTypeDef status, const SensorData *data){
     char buffer[100];
-    HAL_StatusTypeDef status;
-    SensorData data;
-
-    status = sensor_read(&data);
 
     if(status != HAL_OK){
     	snprintf(buffer, sizeof(buffer), "ERR,%d\r\n", (int)status);
@@ -19,9 +15,9 @@ void uart_app_send_sensor_data(void){
 
     }else{
     snprintf(buffer, sizeof(buffer), "%.2f,%.2f,%.2f\r\n",
-            data.temperature,
-            data.pressure,
-            data.humidity);
+            data->temperature,
+            data->pressure,
+            data->humidity);
     BSP_LED_Off(LED2);
     }
     HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);

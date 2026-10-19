@@ -32,6 +32,7 @@
 #include "uart_app.h"
 #include "lcd_driver.h"
 #include <string.h>
+#include "lcd_app.h"
 
 
 
@@ -78,6 +79,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	SensorData data = {0};
+	HAL_StatusTypeDef sensor_status;
 
   /* USER CODE END 1 */
 
@@ -109,9 +112,7 @@ int main(void)
   sensor_init();
   lcd_init();
 
-  lcd_print("HELLO");
-  lcd_set_cursor(1, 5);
-  lcd_print("X");
+
 
 
   /* USER CODE END 2 */
@@ -127,11 +128,13 @@ int main(void)
   while (1)
   {
 	  if(sensor_read_flag){
-		  uart_app_send_sensor_data();
 		  sensor_read_flag = false;
-		  }
 
+		  sensor_status = sensor_read(&data);
+		  uart_app_send_sensor_data(sensor_status, &data);
+		  lcd_app_show_sensor_data(sensor_status, &data);
 
+	  }
 
 
 
