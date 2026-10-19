@@ -3,11 +3,14 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import datetime
 import csv
+import os
 
-ser = serial.Serial("COM5",115200)
+ser = serial.Serial("COM5",115200, timeout=2)
+file_exists = os.path.exists("data.csv")
 csv_file = open("data.csv", "a", newline="")
 csv_writer = csv.writer(csv_file)
-csv_writer.writerow(["timestamp", "temperature", "pressure", "humidity"])   
+if not file_exists:
+    csv_writer.writerow(["timestamp", "temperature", "pressure", "humidity"])
 
 times = []
 temperatures = []
@@ -27,13 +30,28 @@ def parse_line(line):
 def update(frame):
     line = ser.readline().decode('utf-8').strip()
     print(repr(line))
-    temperature, pressure, humidity = parse_line(line)
 
-    times.append(datetime.datetime.now())
+    # nothing came in (timeout)
+    if line == "":
+        return
+
+    # firmware sends ERR,<code> when the sensor fails
+    if line.startswith("ERR"):
+        print("sensor error:", line)
+        return
+
+    try:
+        temperature, pressure, humidity = parse_line(line)
+    except (ValueError, IndexError):
+        print("bad line, skipping:", line)
+        return
+
+    now = datetime.datetime.now()
+    times.append(now)
     temperatures.append(temperature)
     pressures.append(pressure)
     humidities.append(humidity)
-    csv_writer.writerow([datetime.datetime.now(), temperature, pressure, humidity])
+    csv_writer.writerow([now, temperature, pressure, humidity])
     csv_file.flush()
     ax1.clear()
     ax1.plot(times, temperatures)
