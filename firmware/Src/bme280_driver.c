@@ -119,6 +119,12 @@ HAL_StatusTypeDef bme280_read_data(void){
 	int32_t adc_T = (measurement[3] << 12 | measurement[4] << 4 | measurement[5] >> 4);
 	int32_t adc_H = (measurement[6] << 8 | measurement[7]);
 
+	// 0x80000 is the reset value, it means the sensor was restarted (e.g. unplugged)
+	// and is in sleep mode now, so it doesnt measure anything
+	if(adc_T == 0x80000 || adc_P == 0x80000){
+		return HAL_ERROR;
+	}
+
 	bme280_temperature = bme280_compensate_T(adc_T);
 	bme280_pressure = bme280_compensate_P(adc_P);
 	bme280_humidity = bme280_compensate_H(adc_H);
